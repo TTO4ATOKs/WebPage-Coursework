@@ -1,0 +1,177 @@
+﻿@model IEnumerable<WebPage_Coursework.Models.Product>
+
+<style>
+    body {
+        background-color: #dcdedb; /* Тёмный фон */
+        color: white;
+    }
+
+    .card {
+        background-color: #171918; /* Тёмный фон карточки */
+        border-radius: 15px;
+        overflow: hidden;
+        height: 550px;
+        box-shadow: rgba(40, 209, 194, 0.5) 0px 0px 10px, rgba(40, 209, 194, 0.8) 0px 0px 10px;
+    }
+
+    .product-image {
+        height: 400px;
+        object-fit: cover;
+    }
+
+    .card-body {
+        text-align: center;
+    }
+
+    .product-title {
+        font-size: 1.1rem;
+        font-weight: bold;
+    }
+
+    .product-price {
+        color: #fff; /* Цвет текущей цены */
+        font-size: 1.3rem;
+    }
+
+    .old-price {
+        text-decoration: line-through;
+        color: #788;
+        font-size: 0.9rem;
+    }
+
+    .btn-custom {
+        border-radius: 15px;
+        padding: 0.5rem 1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .btn-add-to-cart {
+        background-color: #28d1c2;
+        border: none;
+        color: #fff;
+    }
+
+    .btn-more-info {
+        background-color: transparent;
+        border: 2px solid #28d1c2;
+        color: #28d1c2;
+    }
+
+    .btn-add-to-cart:hover,
+    .btn-more-info:hover {
+        opacity: 0.8;
+    }
+
+    .filters {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .filters select {
+            background-color: #020403;
+        color: #fff;
+            border: 2px solid #28d1c2;
+        border-radius: 5px;
+        padding: 5px;
+    }
+
+    .filters button {
+            background-color: #28d1c2;
+        color: #000;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+    }
+</style>
+
+<div class="flex-column col-12 align-items-center" style="margin-left:-280px;display: flex; flex-direction: column;position:fixed; background-color:#171918; border: 2px solid #3a3959; border-radius:10px; width:10%; padding-bottom:10px;display:flex">
+    <!-- Блок фильтров -->
+    <form method="get" class="filters col-10 align-content-center" style="display: flex; flex-direction: column; gap: 15px; margin:auto">
+        <label for="categoryFilter" style="font-weight: bold; font-size: 20px;">Категория:</label>
+        <select id="categoryFilter" name="categoryId" style="font-size: 16px; border-radius:5px;">
+            <option value="">Все категории</option>
+            @foreach (var category in ViewBag.Categories as List<WebPage_Coursework.Models.Category>)
+            {
+                if (ViewBag.SelectedCategoryId != null && (int)ViewBag.SelectedCategoryId == category.Id)
+                {
+                    <option value="@category.Id" selected="selected">@category.Name</option>
+                }
+                else
+                {
+                    <option value="@category.Id">@category.Name</option>
+                }
+            }
+        </select>
+
+        <button type="submit" style="padding: 10px; font-size: 16px; cursor: pointer;">Применить</button>
+    </form>
+</div>
+<div class="container" style="margin-top: 100px;">
+    <!-- Отображение товаров -->
+    @if (Model == null || !Model.Any())
+    {
+        <p>Товары не найдены.</p>
+    }
+    else
+    {
+        <div class="container my-5">
+            <div class="row justify-content-center">
+                @foreach (var product in Model)
+                {
+                    <div class="col-md-4">
+                        <div class="card" style="margin-bottom: 25px;">
+                            <img src="@product.ImageUrl" alt="Product Image" class="product-image w-100">
+                            <div class="card-body">
+                                <h5 class="product-title">@product.Name</h5>
+                                <p>
+                                    <span class="product-price">@(product.Price)р.</span>
+                                    <span class="old-price">@(product.Price + 350)р.</span>
+                                </p>
+                                <div class="d-flex justify-content-around mt-3">
+                                    <form asp-action="AddToCart" asp-controller="Carts" method="post">
+                                        <input type="hidden" name="productId" value="@product.Id" />
+                                        <input type="hidden" name="quantity" value="1" />
+                                        <button type="submit" class="btn btn-custom btn-add-to-cart">В корзину</button>
+                                    </form>
+                                    <button class="btn btn-custom btn-more-info"
+                                            href="javascript:void(0);"
+                                            onclick="loadProductDetails(@product.Id)">Подробнее</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+    <!-- Модальное окно для отображения деталей товара -->
+    <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <!-- Увеличено до большого размера -->
+            <div class="modal-content" style="background-color:#161616; border-radius: 15px;">
+                <div class="modal-header" style="border-bottom: 4px solid #3a3959; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                    <h5 class="modal-title" id="productModalLabel" style="background-color:#161616; background-color: transparent; color:#28d1c2;padding: 0.5rem 1rem; font-weight: bold; text-transform: uppercase;">
+                        Детали товара
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть" style="background-color:#28d1c2; margin-right:15px;"></button>
+                </div>
+                <div class="modal-body shadow-lg" id="modalBody" style="background-color: #161616; color: white; border-radius: 15px;">
+                    <!-- Данные о товаре загружаются сюда -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function loadProductDetails(productId) {
+        // Используем AJAX для загрузки данных
+        $.get(`/Home/Details/${productId}`, function (data) {
+            $('#modalBody').html(data); // Вставляем данные в тело модального окна
+            $('#productModal').modal('show'); // Показываем модальное окно
+        });
+    }
+</script>

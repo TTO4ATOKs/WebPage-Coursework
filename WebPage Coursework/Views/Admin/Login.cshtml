@@ -1,0 +1,94 @@
+﻿@{
+    ViewBag.Title = "Вход в админ-панель";
+}
+
+<div style="margin-top:100px;">
+    <div class="admin-login-container">
+        <h3 class="admin-title">Вход в админ-панель</h3>
+        <form class="admin-login-form" method="post" asp-action="Login">
+            <div class="form-group">
+                <label for="password" class="form-label">Пароль:</label>
+                <input type="password" id="password" name="password" class="form-input" required>
+            </div>
+            <button type="submit" class="btn-submit">Войти</button>
+        </form>
+    </div>
+
+</div>
+<style>
+    body {
+        background-image: url(/Images/background-admin.png); /* Путь к вашей картинке */
+        background-repeat: repeat-y; /* Повторение только по вертикали */
+        background-size: 100% auto; /* Масштабирование по ширине (100%), а высота подстраивается автоматически */
+        background-attachment: local; /* Фиксированный фон, который не прокручивается с содержимым */
+        background-position: top center; /* Центровка изображения по горизонтали */
+    }
+
+    /* Общий контейнер */
+    .admin-login-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #161616; /* Тёмный фон */
+        border: 2px solid #28d1c2; /* Граница в стиле корзины */
+        border-radius: 10px;
+        box-shadow: rgba(40, 209, 194, 0.8) 0px 9px 7px -6px; /* Эффект свечения */
+        color: #fff; /* Белый текст */
+        text-align: center;
+    }
+
+    /* Заголовок */
+    .admin-title {
+        font-size: 24px;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: #28d1c2; /* Цвет заголовка */
+        margin-bottom: 20px;
+    }
+
+    /* Форма */
+    .admin-login-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    /* Поле ввода */
+    .form-input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #28d1c2;
+        border-radius: 5px;
+        background-color: #000;
+        color: #fff;
+        font-size: 16px;
+        box-shadow: inset rgba(50, 50, 93, 0.25) 0px 10px 20px, inset rgba(0, 0, 0, 0.3) 0px 6px 6px;
+    }
+
+    /* Метка поля */
+    .form-label {
+        font-size: 14px;
+        color: #aaa;
+        text-align: left;
+        width: 100%;
+        margin-bottom: -10px;
+    }
+
+    /* Кнопка отправки */
+    .btn-submit {
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #161616;
+        color: #28d1c2;
+        border: 2px solid #28d1c2;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .btn-submit:hover {
+            background-color: #28d1c2;
+            color: #161616;
+        }
+</style>

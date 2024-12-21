@@ -1,0 +1,162 @@
+﻿@model Cart
+
+<div style="margin-top:100px;">
+    @if (Model?.Items?.Any() == true)
+    {
+        <div class="row">
+            <!-- Заголовок корзины -->
+            <div class="col-12">
+                <h3 class="text-start" style="color:#28d1c2;padding: 0.5rem 1rem; font-weight: bold; text-transform: uppercase;">Корзина</h3>
+            </div>
+        </div>
+
+        decimal total = 0;
+        @foreach (var item in Model.Items)
+        {
+            <div class="container my-1">
+
+                <!-- Список товаров -->
+                <div class="row py-3 align-items-center" style="margin-bottom:5px;background-color:#161616; border-bottom: 2px solid #28d1c2; box-shadow:  rgba(40, 209, 194, 0.8) 0px 9px 7px -6px;">
+                    <!-- Изображение товара -->
+                    <div class="col-2">
+                        <img src="@item.Product.ImageUrl" alt="Product 1" class="img-fluid img" style="border-radius: 20px; box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;">
+                    </div>
+                    <!-- Описание товара -->
+                    <div class="col-4">
+                        <h3 class="mb-0" style="color: #fff;">@item.Product.Name</h3>
+                    </div>
+                    <!-- Количество -->
+                    <div class="col-3 text-center align-items-baseline" style="color: #fff;">
+                        <div class="d-flex justify-content-around">
+                            <div class="" style="font-size:20px;">Кол-во: </div>
+                            <h3 style="margin-right:170px;">@item.Quantity</h3>
+                        </div>
+                    </div>
+                    <!-- Цена -->
+                    <div class="col-2 text-end" style="color: #fff;">
+                        <h4 class="mb-0">@(item.Product.Price * item.Quantity)р.</h4>
+                    </div>
+                    <!-- Удалить -->
+                    <div class="col-1 text-end">
+                        <form asp-action="RemoveCartItem" method="post">
+                            <input type="hidden" name="productId" value="@item.ProductId" />
+                            <button type="submit" class="btn btn-link text-danger p-0"><strong>&times;</strong></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            total += item.Product.Price * item.Quantity;
+        }
+        <!-- Итоговая сумма -->
+        <div class="d-flex align-items-center justify-content-between my-5">
+            <div class="text-start">
+                <div style="color: #28d1c2; font-size: 25px;">ИТОГО: <span class="text-white">@(total)р.</span></div>
+            </div>
+            <div class="text-end justify-content-center">
+                <button id="buyButton" class="btn btn-primary" style="font-size:20px;height:100%;width:100px;background-color: #161616;color: #28d1c2;border: 2px solid #28d1c2;border-radius: 5px;">
+                    Купить
+                </button>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="col-12 align-content-center">
+            <h3 class="justify-content-center" style="color:#28d1c2;padding: 0.5rem 1rem; font-weight: bold; text-transform: uppercase; font-size:35px;margin-left: 400px; margin-top:250px;">Ваша корзина пуста.</h3>
+        </div>
+    }
+
+    <!-- Модальное окно -->
+    <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content" style="background-color: #1c1c1c; border-radius: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
+                <div class="modal-header" style="border-bottom: 1px solid #28d1c2; padding: 15px 20px; background-color: #1c1c1c;">
+                    <h5 class="modal-title" id="orderModalLabel" style="color: #ecf0f1; font-size: 22px; font-weight: bold;">Оформление заказа</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть" style="border: none; background-color:#28d1c2; color: #ecf0f1;"></button>
+                </div>
+                <div class="modal-body" id="modalBody" style="padding: 30px 20px; color: #ecf0f1; font-size: 16px; background-color: #1c1c1c;">
+                    <!-- Данные формы загрузятся сюда -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+        document.getElementById('buyButton').addEventListener('click', async function () {
+        try {
+            // Отправляем запрос для получения содержимого формы оформления заказа
+            const response = await fetch('/Order/GetOrderForm', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (response.ok) {
+                const formHtml = await response.text(); // Получаем HTML содержимое формы
+                document.getElementById('modalBody').innerHTML = formHtml; // Вставляем форму в тело модального окна
+
+                // Открываем модальное окно
+                const orderModal = new bootstrap.Modal(document.getElementById('orderModal'));
+                orderModal.show();
+            } else {
+                alert('Ошибка загрузки формы оформления заказа');
+            }
+        } catch (error) {
+            console.error('Произошла ошибка при загрузке модального окна:', error);
+            alert('Произошла ошибка. Попробуйте еще раз.');
+        }
+    });
+</script>
+
+<style>
+    body {
+        background-image: url(/Images/background-cart.png); /* Путь к вашей картинке */
+        background-repeat: repeat-y; /* Повторение только по вертикали */
+        background-size: 100% auto; /* Масштабирование по ширине (100%), а высота подстраивается автоматически */
+        background-attachment: local; /* Фиксированный фон, который не прокручивается с содержимым */
+        background-position: top center; /* Центровка изображения по горизонтали */
+    }
+
+    .img {
+        width: 200px;
+        height: 100px;
+        object-fit: cover;
+    }
+
+    /* Убираем стандартное оформление кнопок */
+    button.btn-link {
+        text-decoration: none;
+        font-size: 1.5rem;
+    }
+
+        button.btn-link:hover {
+            color: #ff4d4d;
+        }
+
+    .modal-content {
+        border-radius: 12px;
+        background-color: #1c1c1c;;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+        border-bottom: 2px solid #28d1c2;
+    }
+
+    .modal-body {
+        color: #ecf0f1;
+        font-size: 16px;
+        background-color: #1c1c1c;
+    }
+
+    .btn-close {
+        background-color: transparent;
+        color: #ecf0f1;
+    }
+
+    .modal-title {
+        font-size: 22px;
+        font-weight: bold;
+        color: #ecf0f1;
+    }
+</style>

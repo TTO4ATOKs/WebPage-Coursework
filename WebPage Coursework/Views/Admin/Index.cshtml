@@ -1,0 +1,81 @@
+﻿@{
+    ViewBag.Title = "Админ-панель";
+}
+
+<div style="margin-top:100px;">
+    <div class="admin-panel-container">
+        <!-- Заголовок -->
+        <h2 class="admin-panel-title">Добро пожаловать в админ-панель!</h2>
+
+        <!-- Меню -->
+        <ul class="admin-panel-menu">
+            <li>
+                <a href="@Url.Action("Orders", "Admin")" class="admin-menu-link">Заказы</a>
+            </li>
+            <!-- Вы можете добавить больше пунктов меню -->
+            <!-- <li><a href="@Url.Action("Products", "Admin")" class="admin-menu-link">Товары</a></li> -->
+        </ul>
+    </div>
+</div>
+
+<style>
+    body {
+        background-image: url(/Images/background-admin.png); /* Путь к вашей картинке */
+        background-repeat: repeat-y; /* Повторение только по вертикали */
+        background-size: 100% auto; /* Масштабирование по ширине (100%), а высота подстраивается автоматически */
+        background-attachment: local; /* Фиксированный фон, который не прокручивается с содержимым */
+        background-position: top center; /* Центровка изображения по горизонтали */
+    }
+
+    /* Основной контейнер */
+    .admin-panel-container {
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #161616; /* Тёмный фон */
+        border-radius: 10px;
+        border: 2px solid #28d1c2;
+        box-shadow: rgba(40, 209, 194, 0.8) 0px 9px 7px -6px;
+        max-width: 600px;
+        text-align: center;
+    }
+
+    /* Заголовок */
+    .admin-panel-title {
+        font-size: 28px;
+        color: #28d1c2;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+
+    /* Список меню */
+    .admin-panel-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+        .admin-panel-menu li {
+            margin-bottom: 10px;
+        }
+
+    /* Ссылки в меню */
+    .admin-menu-link {
+        display: inline-block;
+        font-size: 18px;
+        padding: 10px 20px;
+        color: #fff;
+        background-color: #161616;
+        border: 2px solid #28d1c2;
+        border-radius: 5px;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+        .admin-menu-link:hover {
+            background-color: #28d1c2;
+            color: #161616;
+            box-shadow: rgba(40, 209, 194, 0.8) 0px 6px 15px;
+        }
+</style>

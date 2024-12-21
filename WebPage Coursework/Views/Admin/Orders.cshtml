@@ -1,0 +1,107 @@
+﻿@model IEnumerable<WebPage_Coursework.Models.OrderViewModel>
+
+<div style="margin-top:100px;">
+    <div class="container orders-container">
+        <h2 class="orders-title">Оформленные заказы</h2>
+        <div class="table-responsive">
+            <table class="table orders-table">
+                <thead>
+                    <tr>
+                        <th>Номер заказа</th>
+                        <th>Клиент</th>
+                        <th>Телефон</th>
+                        <th>Адрес доставки</th>
+                        <th>Дата заказа</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var order in Model)
+                    {
+                        <tr>
+                            <td>@order.Id</td>
+                            <td>@order.CustomerName</td>
+                            <td>@order.Phone</td>
+                            <td>@order.Address</td>
+                            <td>@order.OrderDate.ToString("dd.MM.yyyy")</td>
+                            <td>
+                                <a href="@Url.Action("Details", "Admin", new { id = order.Id })" class="btn btn-outline-info order-btn">Просмотр</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    body {
+        background-image: url(/Images/background-admin.png); /* Путь к вашей картинке */
+        background-repeat: repeat-y; /* Повторение только по вертикали */
+        background-size: 100% auto; /* Масштабирование по ширине (100%), а высота подстраивается автоматически */
+        background-attachment: local; /* Фиксированный фон, который не прокручивается с содержимым */
+        background-position: top center; /* Центровка изображения по горизонтали */
+    }
+
+    /* Основной контейнер */
+    .orders-container {
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #161616; /* Тёмный фон */
+        border-radius: 10px;
+        border: 2px solid #28d1c2;
+        box-shadow: rgba(40, 209, 194, 0.8) 0px 9px 7px -6px; /* Эффект свечения */
+    }
+
+    /* Заголовок */
+    .orders-title {
+        color: #28d1c2;
+        font-size: 24px;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    /* Таблица */
+    .orders-table {
+        width: 100%;
+        color: #fff;
+        border-collapse: separate;
+        border-spacing: 0 10px; /* Пробелы между строками */
+    }
+
+        .orders-table th {
+            background-color: #161616;
+            color: #28d1c2;
+            padding: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-bottom: 2px solid #28d1c2;
+            text-align: center;
+        }
+
+        .orders-table td {
+            background-color: #202020; /* Более светлый оттенок фона */
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #28d1c2;
+        }
+
+    /* Кнопка действий */
+    .order-btn {
+        background-color: #161616;
+        color: #28d1c2;
+        border: 1px solid #28d1c2;
+        padding: 5px 10px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+        .order-btn:hover {
+            background-color: #28d1c2;
+            color: #161616;
+        }
+</style>

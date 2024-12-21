@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebPage_Coursework</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebPage_Coursework.styles.css" asp-append-version="true" />
+</head>
+<style>
+    body {
+        background-image: url(/Images/background.png); /* Путь к вашей картинке */
+        background-repeat: repeat-y; /* Повторение только по вертикали */
+        background-size: 100% auto; /* Масштабирование по ширине (100%), а высота подстраивается автоматически */
+        background-attachment: local; /* Фиксированный фон, который не прокручивается с содержимым */
+        background-position: top center; /* Центровка изображения по горизонтали */
+    }
+</style>
+<body>
+    <header class="fixed-top">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light shadow-lg box-shadow mb-3" style="padding:0; margin:0;border-bottom: 4px solid #3a3959; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; background-color:#1c1c1c">
+            <div class="container-fluid" style="padding:0; margin:0;">
+                <a class="navbar-brand"
+                   asp-area=""
+                   asp-controller="Home"
+                   asp-action="Index"
+                   style="font-size: 1.5rem; color: #28d1c2; padding: 0.5rem 1rem; font-weight: bold; text-transform: uppercase; display: flex; align-items: center;">
+                    <img src="/Images/catalog.png" alt="Каталог" style="height: 2.5em; margin-right: 0.5rem;">
+                    Каталог
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse flex-row-reverse text-capitalize">
+                    <ul class="navbar-nav">
+                        <li class="nav-item" style="display: flex; align-items: center;">
+                            <a class="nav-link text-end"
+                               asp-area=""
+                               asp-controller="Carts"
+                               asp-action="Index"
+                               style="font-size: 1.5rem; color: #28d1c2; padding: 0.5rem 1rem; font-weight: bold; text-transform: uppercase; display: flex; align-items: center;">
+                                <img src="/Images/cart.png" alt="Корзина" style="height: 2.5em; margin-right: 0.5rem;">
+                                Корзина
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+       <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+       </div>
+
+    <footer class="footer text-muted bsolute bottom-0 start-0 w-100">
+        <div class="container">
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

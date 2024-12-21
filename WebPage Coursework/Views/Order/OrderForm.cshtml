@@ -1,0 +1,125 @@
+﻿@model WebPage_Coursework.Models.OrderViewModel
+
+<form id="orderForm" method="post" asp-action="SubmitOrder" style="max-width: 500px; margin: auto; background-color: #1c1c1c; padding: 30px;">
+    <!-- Имя -->
+    <div class="form-group" style="margin-bottom: 20px;">
+        <label for="name" style="color: #ecf0f1; font-size: 18px; font-weight: bold;">Имя:</label>
+        <input type="text" id="name" name="name" class="form-control" required value="@Model.CustomerName"
+               style="padding: 12px; font-size: 16px; border-radius: 8px; border: 1px solid #28d1c2; background-color: #252525; color: #ecf0f1;" />
+    </div>
+
+    <!-- Телефон -->
+    <div class="form-group" style="margin-bottom: 20px;">
+        <label for="phone" style="color: #ecf0f1; font-size: 18px; font-weight: bold;">Номер телефона:</label>
+        <input type="text" id="phone" name="phone" class="form-control" required value="@Model.Phone"
+               style="padding: 12px; font-size: 16px; border-radius: 8px; border: 1px solid #28d1c2; background-color: #252525; color: #ecf0f1;" />
+    </div>
+
+    <!-- Адрес доставки -->
+    <div class="form-group" style="margin-bottom: 20px;">
+        <label for="address" style="color: #ecf0f1; font-size: 18px; font-weight: bold;">Адрес доставки:</label>
+        <input type="text" id="address" name="address" class="form-control" required value="@Model.Address"
+               style="padding: 12px; font-size: 16px; border-radius: 8px; border: 1px solid #28d1c2; background-color: #252525; color: #ecf0f1;" />
+    </div>
+
+    <!-- Кнопка отправки -->
+    <div class="form-group mt-3">
+        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; background-color: #30d9c9; border-radius: 8px; font-size: 18px; border: none; color: white; cursor: pointer; transition: background-color 0.3s;">
+            Подтвердить
+        </button>
+    </div>
+</form>
+
+<!-- Добавим CSS для кнопки в случае hover эффекта -->
+<style>
+    button[type="submit"]:hover {
+        background-color: #28d1c2;
+    }
+</style>
+
+<script>
+            document.getElementById('submitOrderBtn').addEventListener('click', async function () {
+        const name = document.getElementById('name').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+        const address = document.getElementById('address').value.trim();
+
+        // Проверяем, заполнены ли все поля
+        if (!name || !phone || !address) {
+            alert('Пожалуйста, заполните все поля!');
+            return;
+        }
+
+        try {
+            // Получение товаров из корзины
+            const products = await getCartItems();
+
+            // Проверяем, есть ли товары в корзине
+            if (products.length === 0) {
+                alert('Корзина пуста. Добавьте товары перед оформлением заказа.');
+                return;
+            }
+
+            // Отправка данных на сервер
+            const response = await fetch('/Order/SubmitOrder', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, phone, address, products })
+            });
+
+            if (response.ok) {
+                alert('Заказ успешно оформлен');
+                clearCart(); // Очищаем корзину
+                // Обновляем интерфейс (например, закрываем форму или показываем сообщение)
+                document.getElementById('orderFormContainer').innerHTML =
+                    '<p>Спасибо за заказ! Мы свяжемся с вами в ближайшее время.</p>';
+            } else {
+                const errorText = await response.text();
+                alert(`Ошибка оформления заказа: ${errorText}`);
+            }
+        } catch (error) {
+            console.error('Произошла ошибка:', error);
+            alert('Произошла ошибка при оформлении заказа.');
+        }
+    });
+
+    async function getCartItems() {
+        try {
+            const response = await fetch('/Cart/GetCartItems', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (response.ok) {
+                const cartItems = await response.json(); // Предполагается, что сервер возвращает массив товаров
+                return cartItems.map(item => ({
+                    ProductId: item.productId, // Замените на реальное имя поля из вашей модели
+                    Quantity: item.quantity // Замените на реальное имя поля из вашей модели
+                }));
+            } else {
+                console.error('Ошибка получения данных корзины');
+                return [];
+            }
+        } catch (error) {
+            console.error('Произошла ошибка при запросе корзины:', error);
+            return [];
+        }
+    }
+
+    async function clearCart() {
+        try {
+            const response = await fetch('/Cart/ClearCart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (response.ok) {
+                console.log('Корзина успешно очищена');
+                // Вы можете добавить код для обновления интерфейса (например, сделать корзину пустой)
+            } else {
+                console.error('Ошибка очистки корзины');
+            }
+        } catch (error) {
+            console.error('Произошла ошибка при очистке корзины:', error);
+        }
+    }
+</script>

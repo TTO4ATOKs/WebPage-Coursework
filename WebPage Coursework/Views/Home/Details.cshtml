@@ -1,0 +1,107 @@
+﻿@model WebPage_Coursework.Models.Product
+
+<div class="container-fluid my-5">
+    <div class="row text-white align-items-start">
+        <!-- Левая часть: Изображение -->
+        <div class="col-md-5 text-center">
+            <div class="product-image-container mb-4">
+                <img src="@Model.ImageUrl" alt="@Model.Name" class="img-fluid rounded">
+            </div>
+
+            <!-- Основные характеристики -->
+            <div class="text-start">
+                <h4 class="mb-3">Основные характеристики</h4>
+                @if(Model.CategoryId == 1) {
+                    <ul class="list-unstyled">
+                        <li><strong>Экран:</strong> @Model.Screen</li>
+                        <li><strong>Процессор:</strong> @Model.Processor</li>
+                        <li><strong>Память:</strong> @Model.Memory Гб</li>
+                        <li><strong>Оперативная память:</strong> @Model.RAM Гб</li>
+                        <li><strong>Камера:</strong> @Model.CameraResolution</li>
+                        <li><strong>Операционная система:</strong> @Model.OS</li>
+                        <li><strong>Ёмкость аккумулятора:</strong> @Model.Battery мАм*ч</li>
+                    </ul>
+                } else if (Model.CategoryId == 2) {
+                    <ul class="list-unstyled">
+                        <li><strong>Экран:</strong> @Model.Screen</li>
+                        <li><strong>Процессор:</strong> @Model.Processor</li>
+                        <li><strong>Видеокарта:</strong>@Model.GraphicsСard</li>
+                        <li><strong>Память:</strong> @Model.Memory Гб</li>
+                        <li><strong>Оперативная память:</strong> @Model.RAM Гб</li>
+                        <li><strong>Операционная система:</strong> @Model.OS</li>
+                        <li><strong>Ёмкость аккумулятора:</strong> @Model.Battery Вт*ч</li>
+                    </ul>
+                } else if (Model.CategoryId == 3) {
+                    <ul class="list-unstyled">
+                        <li><strong>Экран:</strong> @Model.Screen</li>
+                        <li><strong>Процессор:</strong> @Model.Processor</li>
+                        @if (Model.Memory != 0){<li><strong>Память:</strong> @Model.Memory Гб</li>}
+
+                        @if(Model.RAM != 0){<li><strong>Оперативная память:</strong> @Model.RAM Гб</li>}
+                        <li><strong>Операционная система:</strong> @Model.OS</li>
+                    </ul>
+                }
+            </div>
+        </div>
+
+        <!-- Правая часть: Информация о товаре -->
+        <div class="col-md-7">
+            <!-- Название товара -->
+            <div class="mb-3">
+                <h1 class="fw-bold">@Model.Name</h1>
+                <span class="badge bg-success fs-6">Новинка</span>
+            </div>
+
+            <!-- Цена -->
+            <div class="mb-4" style="margin-top: 100px;">
+                <span class="h2 text-white fw-bold">@Model.Price р.</span>
+                <span class="text-decoration-line-through text-muted fs-5 ms-3">
+                    @(Model.Price + 350) р.
+                </span>
+            </div>
+
+            <!-- Кнопка "Добавить в корзину" -->
+            <form asp-action="AddToCart" asp-controller="Carts" method="post">
+                <input type="hidden" name="productId" value="@Model.Id" />
+                <input type="hidden" name="quantity" value="1" />
+                <button type="submit" class="btn btn-primary btn-lg mb-4 w-100">Добавить в корзину</button>
+            </form>
+
+            <!-- Описание -->
+            <h4 class="col-md-7" style="margin-bottom:16px;">Описание</h4>
+            <p class="text-light">@Model.Description</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Основной фон */
+    html, body {
+        background-color: #161616;
+        color: #fff;
+        height: 100%;
+        margin: 0;
+    }
+
+    /* Изображение товара */
+    .product-image-container img {
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Кнопка "Добавить в корзину" */
+    .btn-primary {
+        background-color: #28d1c2;
+        border: none;
+        font-size: 1.2rem;
+    }
+
+        .btn-primary:hover {
+            background-color: #22b5aa;
+        }
+
+    /* Список характеристик */
+    ul.list-unstyled li {
+        margin-bottom: 10px;
+    }
+</style>
